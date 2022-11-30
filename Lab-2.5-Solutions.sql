@@ -7,14 +7,20 @@ WHERE first_name = 'Scarlett';
 -- 2. How many films (movies) are available for rent 
 -- and how many films have been rented?
 
--- The total number of films the company has,
--- are the number of movies it can rent out including multiple copies.
--- The rented_movies are the number of movies the company
--- has rented out during its existence.
+-- The total number of films the company has are the rows in the inventory.
+-- The movies rented at the moment are those wich were not returned, 
+-- hence the return date doesn't exist and is NULL.
+-- The number of movies available is total films - movies rented.
 
-SELECT count(DISTINCT inventory_id) AS movies_for_rent, 
-count(rental_id) AS rented_movies
-FROM rental;
+SELECT
+(SELECT count(*)
+FROM rental
+WHERE return_date IS NULL) AS movies_rented,
+(SELECT count(*)-movies_rented
+FROM inventory) AS movies_available;
+
+
+SELECT * FROM rental;
 
 -- 3. What are the shortest and longest movie duration? 
 -- Name the values max_duration and min_duration.
